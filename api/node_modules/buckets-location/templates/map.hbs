@@ -1,0 +1,11 @@
+<label>{{name}}</label>
+
+<div class="form-group">
+  <div class="map-container">
+    <div class="mapInput">
+      {{input 'location' value.name placeholder=settings.placeholder}}
+      <a href="#getCurrent" title="Use your current location" class="btn btn-link btn-icon btn-icon-small">{{icon 'location-arrow'}}</a>
+    </div>
+    <div class="map"></div>
+  </div>
+</div>

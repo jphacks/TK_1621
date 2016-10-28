@@ -1,4 +1,32 @@
 /**
+ * field
+ */
+
+// reactive
+var Rx = require('Rx');
+var subject = new Rx.Subject();
+
+subject.subscribe(
+     x => console.log(x)
+)
+
+/**
+ * json 2 object
+ */
+
+function breakJson(json){
+    for (var i=0; i<json.item.length; i++){
+        subject.onNext(json.item[i].description)
+    }   
+}
+
+function loop(){
+    for (var i=0; i<10; i++){
+        subject.onNext(i)
+    }  
+}
+
+/**
  * initialize
  */
 
@@ -31,33 +59,13 @@ var googleReq = new googleVision.Request({
     ]
 });
 
-// initialize microsoft computer vision api
-var msVision = require('request')
-var msHeaders = {
-  'Content-Type':'application/json',
-  'Ocp-Apim-Subscription-Key' : 'c2bcfce9c3594063944ca801616a7ff7'
-}
-var msOptions = {
-  url: 'https://api.projectoxford.ai/vision/v1.0/analyze',
-  method: 'POST',
-  headers: msHeaders,
-  json: {
-      "url":"file:./image/image"
-  },
-  form: {
-      "visualFeatures":"Categories",
-      "language": "en",
-    }
-}
-
-
 /**
  * starting server
  */
 
 // listen at port 3000
 var server = app.listen(3000, function(){
-    console.log("Node.js is listening to PORT:" + server.address().port);
+    //console.log("Node.js is listening to PORT:" + server.address().port);
 });
 
 /**
@@ -75,24 +83,18 @@ app.get("/", function(req, res, next){
 
 // upload image and throw to google cloud vision api
 app.post("/upload", upload.single('image'), function(req, res){
-    console.log(req.file);
+
     var message = req.body.message;
 
     // Using Google Cloud vision
     googleVision.annotate(googleReq).then((res) => {
         // handling response
-        console.log(JSON.stringify(res.responses, null, 4))
+        //console.log(JSON.stringify(res.responses, null, 4))
+        //breakJson(JSON.parse(JSON.stringify));
+        loop();
+        
     }, (e) => {
         console.log('Error: ', e)
     })
 });
 
-/**
- * Throw to other api
- */
-
-// throw to ms computer vision
-msVision(msOptions, function (error, response, body) {
-  console.log(response);
-  //console.log(body);
-})

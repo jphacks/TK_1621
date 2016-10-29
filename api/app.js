@@ -51,6 +51,7 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname)
   }
 });
+
 const upload = multer({ storage: storage })
 
 // initialize google cloud vision api

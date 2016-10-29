@@ -13,17 +13,6 @@ const errorHandler = (err, req, res, next) => {
 
 const app = express()
 
-var wsInstance = expressWs(app);
-
-// reactive
-const subject = new Rx.Subject();
-
-subject.subscribe(
-    x => wsInstance.getWss("/").clients.forEach(function (client) {
-            client.send(x);
-        })
-)
-
 function dispatch(list){
     for (var i=0; i<list.length; i++){
         subject.onNext(list[i].description)
@@ -41,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(errorHandler);
 
+expressWs(app)
 
 // initialize multer(handling image download upload)
 const storage = multer.diskStorage({
@@ -87,8 +77,10 @@ app.ws('/', (ws) => {
     // Using Google Cloud vision
     googleVision.annotate(googleReq).then((res) => {
         // handling response
-        var array = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations));
-        dispatch(array)
+        var list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
+        for (var i=0; i<list.length; i++){
+            ws.send(list[i].description)
+        } 
     }, (e) => {
         console.log('Error: ', e)
     })

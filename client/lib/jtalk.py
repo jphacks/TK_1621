@@ -13,13 +13,7 @@
 
 import subprocess
 
-
-def jtalk(t):
+def speak(t):
     script = './jtalk.sh'
     cmd = ['sh', script, t]
     subprocess.call(cmd)
-
-
-if __name__ == '__main__':
-    text = raw_input("What should I speak? : ") or "こんにちは世界"
-    jtalk(text)

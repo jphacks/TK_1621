@@ -8,7 +8,7 @@
 import cv2
 
 
-class Camera(object):
+class Camera:
     """WEBカメラの設定
     """
 

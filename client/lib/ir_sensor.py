@@ -37,6 +37,3 @@ def read_distance():
     distance = timepassed * 170
     GPIO.cleanup()
     return distance
-
-while True:
-  print "距離: %.1f m" % (read_distance())

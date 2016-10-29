@@ -1,4 +1,3 @@
-const Rx = require('rx');
 const express = require('express');
 const multer = require("multer");
 const googleVision = require('node-cloud-vision-api')
@@ -12,12 +11,6 @@ const errorHandler = (err, req, res, next) => {
 };
 
 const app = express()
-
-function dispatch(list){
-    for (var i=0; i<list.length; i++){
-        subject.onNext(list[i].description)
-    }   
-}
 
 /**
  * initialize
@@ -102,8 +95,10 @@ app.post("/upload", upload.single('image'), function(req, res){
     // Using Google Cloud vision
     googleVision.annotate(googleReq).then((res) => {
         // handling response
-        var array = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations));
-        dispatch(array)
+        var list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
+        for (var i=0; i<list.length; i++){
+            console.log(list[i].description)
+        }
     }, (e) => {
         console.log('Error: ', e)
     })

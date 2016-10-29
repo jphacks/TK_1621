@@ -71,6 +71,11 @@ const cache = LRU(cacheOptions);
 // listen at port 3000
 const server = app.listen(3000);
 
+app.get('/index', function(req, res) {
+    // index.ejsの拡張子は省略可能
+    res.render('index', {title : 'タイトル'});
+});
+
 // websocket
 app.ws('/', (ws) => {
   ws.on('message', (msg) => {

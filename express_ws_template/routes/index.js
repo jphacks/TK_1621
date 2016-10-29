@@ -5,5 +5,5 @@ const routes = {
 };
 
 module.exports = (app) => {
-  app.use('/v1/ws-recordings', routes.wsRecordings);
+  app.use('', routes.wsRecordings);
 };

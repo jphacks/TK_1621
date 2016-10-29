@@ -9,12 +9,21 @@ import requests
 import time
 
 
+def send(url, filename):
+    image = open('/images', 'rb')
+    files = {'param_name': (filename, image, 'image/jpeg')}
+    data = {'another_key': 'another_value'}
+    r = requests.post(url, files=files, data=data)
+    return r.text
+
+
 def main():
     # カメラのセッティング
     image_width = 1280
     image_height = 720
     cam = Camera(image_width=image_width, image_height=image_height)
 
+    interval = 1.
     filename = 'test.jpg'
     url = "http://test.com/api/image/"
 
@@ -23,11 +32,10 @@ def main():
         cam.snapshot(filename)
 
         # 画像をポスト
-        files = {'upload_file': open('images/'+filename, "rb")}
-        requests.post(url, files=files)
+        text = send(url, filename)
 
         print 'send image to "%s"' % url
-        time.sleep(1)
+        time.sleep(interval)
 
 
 if __name__ == '__main__':

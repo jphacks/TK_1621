@@ -28,7 +28,8 @@
     "express-ws": "^2.0.0",
     "morgan": "^1.7.0",
     "watson-developer-cloud": "^2.7.0",
-    "websocket-stream": "^3.3.0"
+    "websocket-stream": "^3.3.0",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
     "eslint": "^3.8.1",

@@ -91,7 +91,8 @@ app.ws('/', (ws) => {
               err => console.log(err),
               () => console.log("completed!!!")
             )
-        }, (e) => {
+        }, 
+        (e) => {
             console.log('Error: ', e)
         });
       }
@@ -115,6 +116,24 @@ function send_to_ws(text, status, ws){
     text: text
   }));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * TEST

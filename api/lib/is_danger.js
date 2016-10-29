@@ -4,10 +4,13 @@ const danger_list = [
 ]
 
 module.exports = (text) => {
-  var strText = new String(text);
+  var isDanger = false
   danger_list.forEach(
     item => {
-      if(new String(item) == strText){ return true; }
+      if(item == text){ 
+        isDanger = true;
+        return;
+      }
     })
-    return false;
+    return isDanger;
 }

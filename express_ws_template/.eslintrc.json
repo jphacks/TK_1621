@@ -1,0 +1,8 @@
+{
+  "extends": ["airbnb"],
+  "rules": {
+    "no-param-reassign": 0,
+    "no-console":0,
+    "new-cap": 0
+  }
+}

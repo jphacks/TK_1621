@@ -45,7 +45,7 @@ def on_open(ws):
             filepath = uuid.uuid4()
             filename = '%s.jpg' % filepath
             camera.snapshot(filename)
-            file = open(filename, "rb").read()
+            file = open('images/'+filename, "rb").read()
             file_data = base64.b64encode(file)
             ws.send(json.dumps({'upload_file': file_data}))
             time.sleep(0.2)
@@ -53,7 +53,7 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
-    ws_url = "ws://localhost:3000"
+    ws_url = "ws://jphacksserver.herokuapp.com/"
     websocket.enableTrace(True)
     ws = websocket.WebSocketApp(ws_url,
                                 on_message=on_message,

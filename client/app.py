@@ -19,7 +19,9 @@ def on_message(ws, message):
     print message
     res = json.loads(message)
     text = res["text"]
-    distance = ir_sensor.read_distance()
+    #TODO 超音波センサで動くようにする
+    # distance = ir_sensor.read_distance()
+    distance = 5
     jtalk.speak(text)
     jtalk.speak("障害物までの距離は%sメートルです" % distance)
     ws.close()

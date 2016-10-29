@@ -20,6 +20,8 @@ class Acceralation(object):
     def __init__(self):
         self.i2c = smbus.SMBus(1)
         self.address = 0x18
+        self.__threshold = 1200
+        self.__notmoving = 500
 
     # ===============================
     # 数値の取得
@@ -52,6 +54,14 @@ class Acceralation(object):
         print ("Y-Value:%6.2f" % (y_a))
         print ("Z-Value:%6.2f" % (z_a))
         print ("Gal:%6.2f" % (gal))
+
+    # ===============================
+    # 撮影するかの判断
+    # ===============================
+    def permit_snapshot(self):
+        x, y, z = self.get()
+        mag = np.sqrt(x**2+y**2+z**2)
+        return (self.notmoving < mag and mag < self.threshold)
 
 
 def main():

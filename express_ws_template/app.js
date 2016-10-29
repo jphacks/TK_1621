@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const router = require('./routes');
+const expressWs = require('express-ws');
 
 // To prevent server crash when occuring uncaughtException.
 process.on('uncaughtException', (err) => {
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 router(app);
+expressWs(app);
 app.use(errorHandler);
 
 const server = app.listen(3000);

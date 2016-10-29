@@ -28,7 +28,6 @@ def on_open(ws):
     file = open(filename, "rb").read()
     file_data = base64.b64encode(file)
     ws.send(json.dumps({'upload_file': file_data}))
-    ws.close()
 
 if __name__ == "__main__":
     ws_url = "ws://localhost:3000"

@@ -4,6 +4,8 @@ const googleVision = require('node-cloud-vision-api')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const expressWs = require('express-ws');
+const getImagePath = require('./lib/get_image_path')
+const translate = require('./lib/translate')
 
 const errorHandler = (err, req, res, next) => {
   res.status(500).send({ error: 'unexpected errors occured.' });
@@ -40,13 +42,15 @@ const upload = multer({ storage: storage })
 // initialize google cloud vision api
 googleVision.init({auth:'AIzaSyBBrKHAumfSaP5EBfOsA5A27qRIWaj83c4'})
 
-const googleReq = new googleVision.Request({
-    image: new googleVision.Image("image/image"),
+const googleReq = (filePath) => {
+  return new googleVision.Request({
+    image: new googleVision.Image(filePath),
     features: [
         new googleVision.Feature('FACE_DETECTION', 4),
         new googleVision.Feature('LABEL_DETECTION', 10),
     ]
-});
+  });
+};
 
 /**
  * starting server
@@ -67,40 +71,21 @@ app.get("/image", function(req, res, next){
 // websocket
 app.ws('/', (ws) => {
   ws.on('message', (msg) => {
-    // Using Google Cloud vision
-    googleVision.annotate(googleReq).then((res) => {
-        // handling response
-        var list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
-        for (var i=0; i<list.length; i++){
-            ws.send(list[i].description)
-        } 
-    }, (e) => {
-        console.log('Error: ', e)
-    })
+    getImagePath(
+      JSON.parse(msg).upload_file,
+      (filePath) => {
+        // Using Google Cloud vision
+        googleVision.annotate(googleReq(filePath)).then((res) => {
+            // handling response
+            const list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
+            for (var i=0; i<list.length; i++){
+                ws.send(translate(list[i].description, 'ja'))
+            }
+        }, (e) => {
+            console.log('Error: ', e)
+        });
+      }
+    )
+    // const filePath = 'image/test.jpg'
   });
 });
-
-/**
- * POST
- */
-
-// upload image and throw to google cloud vision api
-app.post("/upload", upload.single('image'), function(req, res){
-
-    var message = req.body.message;
-
-    // redirect to top
-    res.redirect(302, "../image");
-
-    // Using Google Cloud vision
-    googleVision.annotate(googleReq).then((res) => {
-        // handling response
-        var list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
-        for (var i=0; i<list.length; i++){
-            console.log(list[i].description)
-        }
-    }, (e) => {
-        console.log('Error: ', e)
-    })
-});
-

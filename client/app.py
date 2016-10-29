@@ -53,7 +53,7 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
-    ws_url = "ws://localhost:3000"
+    ws_url = "ws://jphacksserver.herokuapp.com/"
     websocket.enableTrace(True)
     ws = websocket.WebSocketApp(ws_url,
                                 on_message=on_message,

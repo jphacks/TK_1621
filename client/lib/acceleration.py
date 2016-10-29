@@ -61,7 +61,7 @@ class Acceralation(object):
     def permit_snapshot(self):
         x, y, z = self.get()
         mag = np.sqrt(x**2+y**2+z**2)
-        return (self.notmoving < mag and mag < self.threshold)
+        return (self.__notmoving < mag and mag < self.__threshold)
 
 
 def main():

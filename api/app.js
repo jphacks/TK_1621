@@ -138,7 +138,7 @@ function send_to_ws(text, status, ws){
 /**
  * TEST
  */
- execute_test();
+ // execute_test();
 
 function execute_test(){
   // test_cache();

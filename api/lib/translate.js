@@ -10,10 +10,12 @@ const translateClient = Translate({
 });
 
 // Translates some text into Russian
-module.exports = (text, target) => translateClient.translate(text, target, (err, translation) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  cb(translation);
-});
+module.exports = (text, target, cb) => {
+  translateClient.translate(text, target, (err, translation) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    cb(translation);
+  });
+};

@@ -79,7 +79,9 @@ app.ws('/', (ws) => {
             // handling response
             const list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
             for (var i=0; i<list.length; i++){
-                ws.send(translate(list[i].description, 'ja'))
+              translate(list[i].description, 'ja', (translation) => {
+                ws.send(translation);
+              });
             }
         }, (e) => {
             console.log('Error: ', e)

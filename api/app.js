@@ -84,18 +84,18 @@ app.ws('/', (ws) => {
       (filePath) => {
         // Using Google Cloud vision
         googleVision.annotate(googleReq(filePath)).then((res) => {
-            // handling response
-            Rx.Observable
-            .from(JSON.parse(res.responses[0].labelAnnotations)) // json to observable list
-            .map(item => item.description) // unwrap
-            .subscribe(
-              item => {
-                if(isDanger(item)){ translate(item, 'ja', (translation) => send_to_ws(translation, "true", ws) ); }
-                else { send_to_ws("", "false", ws); }
-              },
-              err => console.log(err),
-              () => console.log("completed!!!")
-            )
+          // handling response
+          Rx.Observable
+          .from(res.responses[0].labelAnnotations) // json to observable list
+          .map(item => item.description) // unwrap
+          .subscribe(
+            item => {
+              if(isDanger(item)){ translate(item, 'ja', (translation) => send_to_ws(translation, "true", ws) ); }
+              else { send_to_ws("", "false", ws); }
+            },
+            err => console.log(err),
+            () => console.log("completed!!!")
+          )
         }, 
         (e) => {
             console.log('Error: ', e)

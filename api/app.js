@@ -1,43 +1,39 @@
-/**
- * field
- */
+const Rx = require('rx');
+const express = require('express');
+const multer = require("multer");
+const googleVision = require('node-cloud-vision-api')
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const expressWs = require('express-ws');
 
-// reactive
-var Rx = require('Rx');
-var subject = new Rx.Subject();
+const errorHandler = (err, req, res, next) => {
+  res.status(500).send({ error: 'unexpected errors occured.' });
+  console.log('Do not use next() here', next);
+};
 
-subject.subscribe(
-     x => console.log(x)
-)
+const app = express()
 
-/**
- * json 2 object
- */
-
-function breakJson(json){
-    for (var i=0; i<json.item.length; i++){
-        subject.onNext(json.item[i].description)
+function dispatch(list){
+    for (var i=0; i<list.length; i++){
+        subject.onNext(list[i].description)
     }   
-}
-
-function loop(){
-    for (var i=0; i<10; i++){
-        subject.onNext(i)
-    }  
 }
 
 /**
  * initialize
  */
 
-// initialize express
-var express = require("express");
-var app = express();
+// initialize express(handleing http req)
 app.set('view engine', "ejs");
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(errorHandler);
+
+expressWs(app)
+
 // initialize multer(handling image download upload)
-var multer = require("multer");
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
     cb(null, 'image')
   },
@@ -45,13 +41,13 @@ var storage = multer.diskStorage({
     cb(null, file.fieldname)
   }
 });
-var upload = multer({ storage: storage })
+
+const upload = multer({ storage: storage })
 
 // initialize google cloud vision api
-var googleVision = require('node-cloud-vision-api')
 googleVision.init({auth:'AIzaSyBBrKHAumfSaP5EBfOsA5A27qRIWaj83c4'})
 
-var googleReq = new googleVision.Request({
+const googleReq = new googleVision.Request({
     image: new googleVision.Image("image/image"),
     features: [
         new googleVision.Feature('FACE_DETECTION', 4),
@@ -64,17 +60,31 @@ var googleReq = new googleVision.Request({
  */
 
 // listen at port 3000
-var server = app.listen(3000, function(){
-    //console.log("Node.js is listening to PORT:" + server.address().port);
-});
+const server = app.listen(3000);
 
 /**
  * GET
  */
 
 // handle root page
-app.get("/", function(req, res, next){
+app.get("/image", function(req, res, next){
     res.render("index", {})
+});
+
+// websocket
+app.ws('/', (ws) => {
+  ws.on('message', (msg) => {
+    // Using Google Cloud vision
+    googleVision.annotate(googleReq).then((res) => {
+        // handling response
+        var list = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations))
+        for (var i=0; i<list.length; i++){
+            ws.send(list[i].description)
+        } 
+    }, (e) => {
+        console.log('Error: ', e)
+    })
+  });
 });
 
 /**
@@ -86,15 +96,15 @@ app.post("/upload", upload.single('image'), function(req, res){
 
     var message = req.body.message;
 
+    // redirect to top
+    res.redirect(302, "../image");
+
     // Using Google Cloud vision
     googleVision.annotate(googleReq).then((res) => {
         // handling response
-        //console.log(JSON.stringify(res.responses, null, 4))
-        //breakJson(JSON.parse(JSON.stringify));
-        loop();
-        
+        var array = JSON.parse(JSON.stringify(res.responses[0].labelAnnotations));
+        dispatch(array)
     }, (e) => {
         console.log('Error: ', e)
     })
 });
-

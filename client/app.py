@@ -24,8 +24,7 @@ def on_message(ws, message):
     # TODO 超音波センサで動くようにする
     # distance = ir_sensor.read_distance()
     distance = 5
-    jtalk.speak(text)
-    jtalk.speak("障害物までの距離は%sメートルです" % distance)
+    jtalk.speak("%sメートル%s" % (distance, text))
 
 
 def on_error(ws, error):

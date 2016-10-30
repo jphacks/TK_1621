@@ -23,8 +23,8 @@ def on_message(ws, message):
     text = res["text"].encode('utf-8')
     # TODO 超音波センサで動くようにする
     distance = ir_sensor.read_distance()
-    distance = 5
-    jtalk.speak("%sメートル%s" % (distance, text))
+    jtalk.speak("%-3.2fメートル%s" % (distance, text))
+    ws.close()
 
 
 def on_error(ws, error):
@@ -38,25 +38,24 @@ def on_close(ws):
 
 def on_open(ws):
     camera = Camera()
-    accel = Acceralation()
-    while True:
-        if accel.permit_snapshot():
-            filepath = uuid.uuid4()
-            filename = '%s.jpg' % filepath
-            camera.snapshot(filename)
-            file = open('images/'+filename, "rb").read()
-            file_data = base64.b64encode(file)
-            ws.send(json.dumps({'upload_file': file_data}))
-            time.sleep(0.2)
-        time.sleep(0.1)
-
+    filepath = uuid.uuid4()
+    filename = '%s.jpg' % filepath
+    camera.snapshot(filename)
+    file = open('images/'+filename, "rb").read()
+    file_data = base64.b64encode(file)
+    ws.send(json.dumps({'upload_file': file_data}))
+    time.sleep(0.2)
 
 if __name__ == "__main__":
     ws_url = "ws://jphacksserver.herokuapp.com/"
     websocket.enableTrace(True)
-    ws = websocket.WebSocketApp(ws_url,
-                                on_message=on_message,
-                                on_error=on_error,
-                                on_close=on_close)
-    ws.on_open = on_open
-    ws.run_forever()
+    accel = Acceralation()
+    while True:
+        if accel.permit_snapshot():
+            ws = websocket.WebSocketApp(ws_url,
+                    on_message=on_message,
+                    on_error=on_error,
+                    on_close=on_close)
+            ws.on_open = on_open
+            ws.run_forever()
+        time.sleep(0.1)

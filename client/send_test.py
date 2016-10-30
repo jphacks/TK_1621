@@ -12,7 +12,10 @@ import base64
 import json
 
 def on_message(ws, message):
-    print message
+    res = json.loads(message)
+    text = res["text"].encode('utf-8')
+    distance = 5
+    print "%sメートル%s" % (distance, text)
 
 def on_error(ws, error):
     print error
@@ -27,7 +30,8 @@ def on_open(ws):
     ws.send(json.dumps({'upload_file': file_data}))
 
 if __name__ == "__main__":
-    ws_url = "ws://localhost:3000"
+    ws_url = "ws://jphacksserver.herokuapp.com"
+    # ws_url = "ws://localhost:3000"
     websocket.enableTrace(True)
     ws = websocket.WebSocketApp(ws_url,
                                 on_message=on_message,

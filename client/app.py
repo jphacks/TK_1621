@@ -20,7 +20,7 @@ from lib import ir_sensor
 def on_message(ws, message):
     print message
     res = json.loads(message)
-    text = res["text"]
+    text = res["text"].encode('utf-8')
     # TODO 超音波センサで動くようにする
     # distance = ir_sensor.read_distance()
     distance = 5

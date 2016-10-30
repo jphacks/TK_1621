@@ -90,5 +90,9 @@
 
 ### 独自技術
 #### 期間中に開発した独自機能・技術
-* 独自で開発したものの内容をこちらに記載してください
-* 特に力を入れた部分をファイルリンク、またはcommit_idを記載してください（任意）
+* client/lib/acceleration.py(https://github.com/jphacks/TK_1621/blob/master/client/lib/acceleration.py#L61)  
+加速度センサから取得した加速度データを元に画像を撮影するか判断している
+
+* ART/intro.gif(https://github.com/jphacks/TK_1621/blob/master/ART/intro.gif)  
+作成した3Dモデルで作成したプロダクトをわかりやすく表示しました
+

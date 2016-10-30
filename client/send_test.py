@@ -24,7 +24,7 @@ def on_close(ws):
     print "### closed ###"
 
 def on_open(ws):
-    filename = 'image/demo-image.jpg'
+    filename = 'images/demo-image.jpg'
     file = open(filename, "rb").read()
     file_data = base64.b64encode(file)
     ws.send(json.dumps({'upload_file': file_data}))

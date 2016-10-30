@@ -1,4 +1,7 @@
 # Walky
+
+<img src="https://github.com/jphacks/TK_1621/blob/master/ART/intro.gif" width="50%">
+
 ## 製品概要
 ### 散歩 × Tech
 ここに行ってみたい、そんな散歩の情動を、大切に。  

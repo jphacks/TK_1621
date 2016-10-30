@@ -10,9 +10,9 @@ fi
 # 定数定義（出力ファイル名、辞書の場所、音声データの場所）
 TMPFILE=`mktemp /tmp/tmp.`$(date +%Y%m%d%H%M%S)`.wav`
 # 辞書
-DIC=./dic
+DIC=/home/pi/Desktop/client/lib/dic
 # 音声データ
-VOICE=./voice/mei_normal.htsvoice
+VOICE=/home/pi/Desktop/client/lib/voice/mei_normal.htsvoice
 
 
 # 音声データ生成

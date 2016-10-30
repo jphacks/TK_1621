@@ -1,9 +1,9 @@
- #!/usr/bin/env python
-  # -*- coding: utf-8 -*-
-  #
-  # Websocket Client
-  #
-  # created by Shun Iwase
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Websocket Client
+#
+# created by Shun Iwase
 
 import websocket
 import thread
@@ -11,17 +11,21 @@ import time
 import base64
 import json
 
+
 def on_message(ws, message):
     res = json.loads(message)
     text = res["text"].encode('utf-8')
     distance = 5
     print "%sメートル%s" % (distance, text)
 
+
 def on_error(ws, error):
     print error
 
+
 def on_close(ws):
     print "### closed ###"
+
 
 def on_open(ws):
     filename = 'images/demo-image.jpg'

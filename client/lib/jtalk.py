@@ -14,6 +14,6 @@
 import subprocess
 
 def speak(t):
-    script = './jtalk.sh'
+    script = '/home/pi/Desktop/client/lib/jtalk.sh'
     cmd = ['sh', script, t]
     subprocess.call(cmd)

@@ -22,7 +22,7 @@ def on_message(ws, message):
     res = json.loads(message)
     text = res["text"].encode('utf-8')
     # TODO 超音波センサで動くようにする
-    # distance = ir_sensor.read_distance()
+    distance = ir_sensor.read_distance()
     distance = 5
     jtalk.speak("%sメートル%s" % (distance, text))
 

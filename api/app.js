@@ -96,7 +96,7 @@ app.ws('/', (ws) => {
             err => console.log(err),
             () => console.log("completed!!!")
           )
-        }, 
+        },
         (e) => {
             console.log('Error: ', e)
         });
@@ -114,7 +114,7 @@ function send_to_ws(text, status, ws){
   } else {
     cache.set(text, text);
   }
-  
+
   // send to ws
   ws.send(toJson({
     is_danger: status,
@@ -194,7 +194,7 @@ function test_Observable(){
     .map(item => item.description)
     .subscribe(
       item => {
-        if(isDanger(item)){ translate(item, 'ja', (translation) => send_to_test(translation, "true") ); } 
+        if(isDanger(item)){ translate(item, 'ja', (translation) => send_to_test(translation, "true") ); }
         else { send_to_test("", "false"); }
       })
 }

@@ -29,13 +29,16 @@ def on_message(client, userdata, msg):
     print msg
     res = json.loads(msg)
     text = res["text"].encode('utf-8')
-    distance = ir_sensor.read_distance()
-    if distance == "close":
-        jtalk.speak("近くの%s" % text)
-    elif distance == "far":
-        jtalk.speak("遠くの%s" % text)
-    else:
-        jtalk.speak("%-3.2fメートル前方に%s" % (distance, text))
+    try:
+        distance = ir_sensor.read_distance()
+        if distance == "close":
+            jtalk.speak("近くの%s" % text)
+        elif distance == "far":
+            jtalk.speak("遠くの%s" % text)
+        else:
+            jtalk.speak("%-3.2fメートル前方に%s" % (distance, text))
+    except UnboundLocalError:
+        print 'エラーが発生しました'
 
 def on_publish(client, userdata, mid):
     print("publish: {0}".format(mid))
@@ -51,12 +54,11 @@ if __name__ == "__main__":
     accel = Acceralation()
     camera = Camera()
     while True:
-        # if accel.permit_snapshot():
-        filepath = uuid.uuid4()
-        filename = '%s.jpg' % filepath
-        # camera.snapshot(filename)
-        # file = open('images/'+filename, "rb").read()
-        file = open('images/test.jpg', "rb").read()
-        file_data = base64.b64encode(file)
-        client.publish(pub_topic, file_data, 0)
-        time.sleep(0.5)
+        if accel.permit_snapshot():
+            filepath = uuid.uuid4()
+            filename = '%s.jpg' % filepath
+            camera.snapshot(filename)
+            file = open('images/'+filename, "rb").read()
+            file_data = base64.b64encode(file)
+            client.publish(pub_topic, file_data, 0)
+            time.sleep(10.0)

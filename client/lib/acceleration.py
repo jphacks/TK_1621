@@ -21,7 +21,7 @@ class Acceralation(object):
         self.i2c = smbus.SMBus(1)
         self.address = 0x18
         self.__threshold = 1200
-        self.__notmoving = 500
+        self.__notmoving = 450
 
     # ===============================
     # 数値の取得
@@ -30,17 +30,17 @@ class Acceralation(object):
         x_l = self.i2c.read_byte_data(self.address, 0x28)
         x_h = self.i2c.read_byte_data(self.address, 0x29)
         x_a = (x_h << 8 | x_l) >> 4
-        x_a = s18(x_a)/1024.0*980.0
+        x_a = s18(x_a)/1024.0*980.0 - 940.0
 
         y_l = self.i2c.read_byte_data(self.address, 0x2A)
         y_h = self.i2c.read_byte_data(self.address, 0x2B)
         y_a = (y_h << 8 | y_l) >> 4
-        y_a = s18(y_a)/1024.0*980.0
+        y_a = s18(y_a)/1024.0*980.0 - 90.0
 
         z_l = self.i2c.read_byte_data(self.address, 0x2C)
         z_h = self.i2c.read_byte_data(self.address, 0x2D)
         z_a = (z_h << 8 | z_l) >> 4
-        z_a = s18(z_a)/1024.0*980.0 - 980.0  # 重力加速度は考慮しない
+        z_a = s18(z_a)/1024.0*980.0 - 150.0
 
         return (x_a, y_a, z_a)
 
@@ -61,7 +61,7 @@ class Acceralation(object):
     def permit_snapshot(self):
         x, y, z = self.get()
         mag = np.sqrt(x**2+y**2+z**2)
-        print "x : %s, y : %s, z : %s, mag : %s" % (x, y, z, mag)
+        # print "x : %s, y : %s, z : %s, mag : %s" % (x, y, z, mag)
         return (self.__notmoving < mag and mag < self.__threshold)
 
 
@@ -70,6 +70,9 @@ def main():
 
     while True:
         x, y, z = sensor.get()
+        print ("X-Value:%6.2f" % (x))
+        print ("Y-Value:%6.2f" % (y))
+        print ("Z-Value:%6.2f" % (z))
         print np.sqrt(x**2+y**2+z**2)
         time.sleep(0.1)
 
